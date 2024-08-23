@@ -102,8 +102,9 @@ public:
 private:
 	static Game* sInstance;
 
-	/// path to Lionhead Studios Ltd/Black & White folder
-	const std::filesystem::path _gamePath;
+	/// user provided path to Lionhead Studios Ltd/Black & White folder
+	/// FileSystem may try to load default path if this is empty
+	const std::filesystem::path _argsGamePath;
 
 	std::filesystem::path _startMap;
 

@@ -139,9 +139,9 @@ void DefaultFileSystem::Iterate(const std::filesystem::path& path, bool recursiv
 	}
 }
 
-void DefaultFileSystem::SetGamePath(const std::filesystem::path& path)
+void DefaultFileSystem::ConfigureGamePath(const std::filesystem::path& hint)
 {
-	_gamePath = path;
+	_gamePath = hint;
 
 #if defined(unix) || defined(__unix__) || defined(__unix)
 	if (_gamePath.string().size() >= 2 && _gamePath.string().c_str()[0] == '~' && _gamePath.string().c_str()[1] == '/')
@@ -164,16 +164,7 @@ void DefaultFileSystem::SetGamePath(const std::filesystem::path& path)
 
 			_gamePath = std::filesystem::path(data.data());
 		}
-		else
-		{
-			throw std::runtime_error(fmt::format("Failed to find the GameDir registry value, game not installed."));
-		}
 #endif // _WIN32
-	}
-
-	if (!_gamePath.empty() && !Exists(_gamePath))
-	{
-		throw std::runtime_error(fmt::format("GamePath does not exist: '{}'", _gamePath.generic_string()));
 	}
 }
 std::unique_ptr<std::istream> DefaultFileSystem::GetData(const std::filesystem::path& path)

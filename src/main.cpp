@@ -44,7 +44,7 @@ bool parseOptions(int argc, char** argv, openblack::Arguments& args, int& return
 	// clang-format off
 	options.add_options()
 		("h,help", "Display this help message.")
-		("g,game-path", "Path to the Data/ and Scripts/ directories of the original Black & White game. (Required)", cxxopts::value<std::string>())
+		("g,game-path", "Path to the Data/ and Scripts/ directories of the original Black & White game.", cxxopts::value<std::string>())
 		("W,width", "Window resolution in the x axis.", cxxopts::value<uint16_t>()->default_value("1280"))
 		("H,height", "Window resolution in the y axis.", cxxopts::value<uint16_t>()->default_value("1024"))
 		("u,ui-scale", "Scaling of the GUI", cxxopts::value<float>()->default_value("1.0"))
@@ -151,28 +151,7 @@ bool parseOptions(int argc, char** argv, openblack::Arguments& args, int& return
 		}
 
 		args.executablePath = argv[0];
-		if (result.count("game-path") == 0)
-		{
-#ifdef _WIN32
-			// if we're on windows we can find the install path
-			DWORD dataLen = 0;
-			LSTATUS status = RegGetValue(HKEY_CURRENT_USER, "SOFTWARE\\Lionhead Studios Ltd\\Black & White", "GameDir",
-			                             RRF_RT_REG_SZ, nullptr, nullptr, &dataLen);
-			if (status == ERROR_SUCCESS)
-			{
-				std::vector<char> path(dataLen);
-				status = RegGetValue(HKEY_CURRENT_USER, "SOFTWARE\\Lionhead Studios Ltd\\Black & White", "GameDir",
-				                     RRF_RT_REG_SZ, nullptr, path.data(), &dataLen);
-
-				args.gamePath = std::string(path.data());
-			}
-			else
-#endif
-			{
-				throw cxxopts::exceptions::option_has_no_value("game-path");
-			}
-		}
-		else
+		if (result.count("game-path") != 0)
 		{
 			args.gamePath = result["game-path"].as<std::string>();
 		}

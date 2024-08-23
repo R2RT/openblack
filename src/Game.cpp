@@ -71,7 +71,7 @@ const std::string k_WindowTitle = "openblack";
 Game* Game::sInstance = nullptr;
 
 Game::Game(Arguments&& args) noexcept
-    : _gamePath(args.gamePath)
+    : _argsGamePath(args.gamePath)
     , _startMap(args.startLevel)
     , _handPose(glm::identity<glm::mat4>())
     , _requestScreenshot(args.requestScreenshot)
@@ -455,9 +455,10 @@ bool Game::Initialize() noexcept
 		}
 	}));
 
-	if (!fileSystem.IsPathValid(_gamePath))
+	fileSystem.ConfigureGamePath(_argsGamePath);
+	if (!fileSystem.IsPathValid(fileSystem.GetGamePath()))
 	{
-		// no key, don't guess, let the user know to set the command param
+		// no key, default guess did not work, let the user know to set the command param
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Game Path missing",
 		                         "Game path was not supplied, use the -g "
 		                         "command parameter to set it.",
@@ -465,8 +466,6 @@ bool Game::Initialize() noexcept
 		SPDLOG_LOGGER_ERROR(spdlog::get("game"), "Failed to find the GameDir.");
 		return false;
 	}
-
-	fileSystem.SetGamePath(_gamePath);
 
 	SPDLOG_LOGGER_DEBUG(spdlog::get("game"), "The GamePath is \"{}\".", fileSystem.GetGamePath().generic_string());
 

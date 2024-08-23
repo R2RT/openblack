@@ -114,7 +114,7 @@ public:
 	[[nodiscard]] virtual bool IsPathValid(const std::filesystem::path& path) = 0;
 	virtual std::unique_ptr<Stream> Open(const std::filesystem::path& path, Stream::Mode mode) = 0;
 	[[nodiscard]] virtual bool Exists(const std::filesystem::path& path) const = 0;
-	virtual void SetGamePath(const std::filesystem::path& path) = 0;
+	virtual void ConfigureGamePath(const std::filesystem::path& hint) = 0;
 	[[nodiscard]] virtual const std::filesystem::path& GetGamePath() const = 0;
 	virtual void AddAdditionalPath(const std::filesystem::path& path) = 0;
 	virtual std::vector<uint8_t> ReadAll(const std::filesystem::path& path) = 0;
