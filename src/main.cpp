@@ -160,11 +160,11 @@ bool parseOptions(int argc, char** argv, openblack::Arguments& args, int& return
 			                             RRF_RT_REG_SZ, nullptr, nullptr, &dataLen);
 			if (status == ERROR_SUCCESS)
 			{
-				char* path = new char[dataLen];
+				std::vector<char> path(dataLen);
 				status = RegGetValue(HKEY_CURRENT_USER, "SOFTWARE\\Lionhead Studios Ltd\\Black & White", "GameDir",
-				                     RRF_RT_REG_SZ, nullptr, path, &dataLen);
+				                     RRF_RT_REG_SZ, nullptr, path.data(), &dataLen);
 
-				args.gamePath = std::string(path);
+				args.gamePath = std::string(path.data());
 			}
 			else
 #endif
